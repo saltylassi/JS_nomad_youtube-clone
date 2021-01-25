@@ -1,30 +1,30 @@
 import routes from "./routes";
-import multer from 'multer';
+import multer from "multer";
 
-const multerVideo = multer({dest:"uploads/videos/"});
+const multerVideo = multer({ dest: "uploads/videos/" });
 
-export const localsMiddleware = (req,res,next)=>{
+export const localsMiddleware = (req, res, next) => {
     res.locals.siteName = "youtubeClone";
     res.locals.routes = routes;
-    res.locals.user=req.user || null ;
+    res.locals.loggeduser = req.user || null;
+    console.log(`on middleware, ${req.user}`);
     next();
-}
+};
 
-export const onlyPublic = (req,res,next) =>{
-    if(req.user){
+export const onlyPublic = (req, res, next) => {
+    if (req.user) {
         res.redirect(routes.home);
-    }else{
+    } else {
         next();
     }
-}
+};
 
-export const onlyPrivate = (req,res,next)=>{
-    if(!req.user){
+export const onlyPrivate = (req, res, next) => {
+    if (!req.user) {
         res.redirect(routes.home);
-    }else{
+    } else {
         next();
     }
-}
+};
 
-export const uploadVideo = multerVideo.single('videoFile'); //한 번에 하나만
-
+export const uploadVideo = multerVideo.single("videoFile"); //한 번에 하나만

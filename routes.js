@@ -8,6 +8,7 @@ const USERS = "/users";
 const USER_DETAIL = "/:id";
 const EDIT_PROFILE = "/edit-profile";
 const CHANGE_PASSWORD = "/change-password";
+const ME = "/me";
 
 const VIDEOS = "/videos";
 const VIDEO_DETAIL = "/:id";
@@ -19,30 +20,31 @@ const GITHUB = "/auth/github";
 const GITHUB_CALLBACK = "/auth/github/callback";
 
 const routes = {
-    home:HOME,
-    join:JOIN,
-    login:LOGIN,
-    logout:LOGOUT,
-    search:SEARCH,
-    users:USERS,
-    userDetail:(id)=>{
-        return id?`/users/${id}`:USER_DETAIL;  
+    home: HOME,
+    join: JOIN,
+    login: LOGIN,
+    logout: LOGOUT,
+    search: SEARCH,
+    users: USERS,
+    userDetail: (id) => {
+        return id ? `/users/${id}` : USER_DETAIL;
     },
-    editProfile:EDIT_PROFILE,
-    changePassword:CHANGE_PASSWORD,
-    videos:VIDEOS,
-    videoDetail:(id)=>{
-        return id?`/videos/${id}`:VIDEO_DETAIL;  
+    editProfile: EDIT_PROFILE,
+    changePassword: CHANGE_PASSWORD,
+    videos: VIDEOS,
+    videoDetail: (id) => {
+        return id ? `/videos/${id}` : VIDEO_DETAIL;
     },
-    upload:UPLOAD,
-    editVideo:(id)=>{
-        return id?`/videos/${id}/edit`:EDIT_VIDEO;  
+    upload: UPLOAD,
+    editVideo: (id) => {
+        return id ? `/videos/${id}/edit` : EDIT_VIDEO;
     },
-    deleteVideo: (id)=>{
-        return id?`/videos/${id}/delete`:DELETE_VIDEO;  
+    deleteVideo: (id) => {
+        return id ? `/videos/${id}/delete` : DELETE_VIDEO;
     },
-    github:GITHUB,
-    githubCallback:GITHUB_CALLBACK
-}
+    github: GITHUB,
+    githubCallback: GITHUB_CALLBACK,
+    me: ME,
+};
 
 export default routes;

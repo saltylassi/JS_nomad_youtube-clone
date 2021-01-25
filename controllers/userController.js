@@ -48,6 +48,7 @@ export const postGithubLogin = (req, res) => {
 };
 
 export const githubLoginCallback = async (accessToken, refreshToken, profile, cb) => {
+    console.log(profile);
     const {
         _json: { id: githubId, avatar_url: avatarUrl, name, email },
     } = profile;
@@ -56,9 +57,12 @@ export const githubLoginCallback = async (accessToken, refreshToken, profile, cb
             email,
         });
         if (user) {
-            user.githubId = id;
-            console.log(user);
+            user.githubId = githubId;
+            user.avatarUrl = avatarUrl;
+            user.name = name;
+            user.email = email;
             user.save();
+            console.log(user);
             return cb(null, user); //에러없이 user만 return, 쿠키에저장
         } else {
             const newUser = await User.create({
@@ -80,8 +84,13 @@ export const logout = (req, res) => {
     res.redirect(routes.home);
 };
 
+export const getMe = (req, res) => {
+    res.render("userDetail", { pageTitle: "User Detail", user: req.user });
+};
+
 export const userDetail = (req, res) => {
-    res.render("userDetail", { pageTitle: "User Detail" });
+    console.log(`userDetail, ${req.user}`);
+    res.render("userDetail", { pageTitle: "User Detail", user: req.user });
 };
 export const editProfile = (req, res) => {
     res.render("editProfile", { pageTitle: "Edit Profile" });
