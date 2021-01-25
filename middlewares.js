@@ -6,7 +6,7 @@ const multerVideo = multer({ dest: "uploads/videos/" });
 export const localsMiddleware = (req, res, next) => {
     res.locals.siteName = "youtubeClone";
     res.locals.routes = routes;
-    res.locals.loggeduser = req.user || null;
+    res.locals.loggedUser = req.user || null;
     console.log(`on middleware, ${req.user}`);
     next();
 };
