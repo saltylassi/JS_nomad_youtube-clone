@@ -49,7 +49,7 @@ export const postGithubLogin = (req, res) => {
 
 export const githubLoginCallback = async (accessToken, refreshToken, profile, cb) => {
     const {
-        _json: { id, avatar_url, name, email },
+        _json: { id: githubId, avatar_url: avatarUrl, name, email },
     } = profile;
     try {
         const user = await User.findOne({
@@ -64,8 +64,8 @@ export const githubLoginCallback = async (accessToken, refreshToken, profile, cb
             const newUser = await User.create({
                 email,
                 name,
-                githubId: id,
-                avatarUrl: avatar_url,
+                githubId,
+                avatarUrl,
             });
             return cb(null, newUser);
         }
