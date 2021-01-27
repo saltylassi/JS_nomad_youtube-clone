@@ -1,6 +1,6 @@
 import express from "express";
 import passport from "passport";
-import { postJoin, getJoin, postLogin, getLogin, logout, githubLogin, postGithubLogin, getMe } from "../controllers/userController";
+import { postJoin, getJoin, postLogin, getLogin, logout, githubLogin, postGithubLogin, userDetail, getMe } from "../controllers/userController";
 import { home, search } from "../controllers/videoController";
 import { onlyPublic, onlyPrivate } from "../middlewares";
 import routes from "../routes";
