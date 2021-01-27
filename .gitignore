@@ -117,4 +117,4 @@ dist
 
 package-lock.json
 uploads/videos
-# uploads/avatars
+uploads/avatars
