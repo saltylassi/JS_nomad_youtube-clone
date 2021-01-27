@@ -129,6 +129,23 @@ export const postEditProfile = async (req, res) => {
     }
 };
 
-export const changePassword = (req, res) => {
+export const getChangePassword = (req, res) => {
     res.render("changePassword", { pageTitle: "Change Password" });
+};
+
+export const postChangePassword = async (req, res) => {
+    const {
+        body: { oldPassword, newPassword1, newPassword2 },
+    } = req;
+    try {
+        if (newPassword1 !== newPassword2) {
+            res.status(400);
+            res.redirect(routes.changePassword);
+            return;
+        }
+        req.user.changePassword(oldPassword, newPassword1); //암호화
+    } catch (error) {
+        console.log(error);
+        res.redirect(routes.changePassword);
+    }
 };
