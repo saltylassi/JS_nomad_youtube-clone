@@ -35,15 +35,18 @@ export const postUpload = async (req, res) => {
     const {
         body: { title, description },
         file: { path },
+        user,
     } = req;
 
     const newVideo = await Video.create({
         fileUrl: path,
         title: title,
         description: description,
+        creator: user.id,
     });
 
-    console.log(newVideo);
+    user.videos.push(newVideo.id);
+    user.save();
 
     res.redirect(routes.videoDetail(newVideo.id));
 };
@@ -54,7 +57,7 @@ export const videoDetail = async (req, res) => {
     } = req;
 
     try {
-        const video = await Video.findById(id); //id == req.params.id인 Video를 DB에서 탐색
+        const video = await Video.findById(id).populate("creator"); //populate는 objID에 사용, id로 해당 객체를 참조
         res.render("videoDetail", { pageTitle: "Video Detail", video });
     } catch (error) {
         console.log(error);
@@ -68,8 +71,12 @@ export const getEditVideo = async (req, res) => {
     } = req;
 
     try {
-        const video = await Video.findById(id);
-        res.render("editVideo", { pageTitle: "Edit Video", video });
+        const video = await Video.findById(id).populate("creator");
+        if (video.creator.id != req.user.id) {
+            throw Error();
+        } else {
+            res.render("editVideo", { pageTitle: "Edit Video", video });
+        }
     } catch (error) {
         console.log(error);
         res.redirect(routes.home);
@@ -102,7 +109,12 @@ export const deleteVideo = async (req, res) => {
     } = req;
 
     try {
-        await Video.findOneAndRemove(id);
+        const video = await Video.findById(id).populate("creator");
+        if (video.creator.id !== req.user.id) {
+            throw Error();
+        } else {
+            await Video.findOneAndRemove(id);
+        }
     } catch (error) {
         console.log(error);
     } finally {

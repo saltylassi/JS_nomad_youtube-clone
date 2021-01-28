@@ -1,34 +1,37 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const VideoSchema = new mongoose.Schema({
-    fileUrl:{
-        type:String,
-        required:"File URL is required."
+    fileUrl: {
+        type: String,
+        required: "File URL is required.",
     },
-    title:{
-        type:String,
-        required:"Title is required."
+    title: {
+        type: String,
+        required: "Title is required.",
     },
-    description:String,
-    views:{
-        type:Number,
-        default:0
+    description: String,
+    views: {
+        type: Number,
+        default: 0,
     },
-    createdAt:{
-        type:Date,
-        default:Date.now
+    createdAt: {
+        type: Date,
+        default: Date.now,
     },
-    comments:[
+    comments: [
         {
-            type:mongoose.Schema.Types.ObjectId,
-            ref:"Comment"
-        }
-    ]
-    
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Comment",
+        },
+    ],
+    creator: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+    },
 });
 
 //스키마 정의
 
-const model = mongoose.model("Video",VideoSchema); //생성
+const model = mongoose.model("Video", VideoSchema); //생성
 
 export default model;

@@ -91,7 +91,7 @@ export const userDetail = async (req, res) => {
     } = req;
 
     try {
-        const user = await User.findById(id);
+        const user = await User.findById(id).populate("videos");
         console.log(user);
         res.render("userDetail", { pageTitle: "User Detail", user });
     } catch (error) {
@@ -109,17 +109,13 @@ export const postEditProfile = async (req, res) => {
         user: { _id: id },
     } = req;
 
-    console.log(file.path);
-
-    // const user = await User.findById(id);
-    // console.log(user);
     try {
+        console.log(req.user);
         await User.findByIdAndUpdate(id, {
             name,
             email,
-            avatarUrl: file ? file.path : req.user.AvatarUrl,
+            avatarUrl: file ? file.path : req.user.avatarUrl,
         });
-
         res.redirect(routes.me);
     } catch (error) {
         console.log(error);
