@@ -2,64 +2,64 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const path = require("path");
 const autoprefixer = require("autoprefixer");
 const MODE = process.env.WEBPACK_ENV;
-const ENTRY_FILE = path.resolve(__dirname,"assets","js","main.js");
-const OUTPUT_DIR = path.join(__dirname,"static");
+const ENTRY_FILE = path.resolve(__dirname, "assets", "js", "main.js");
+const OUTPUT_DIR = path.join(__dirname, "static");
 
 const config = {
-    entry:["@babel/polyfill",ENTRY_FILE],
-    mode:MODE,
-    module:{
-        rules:[
+    devtool: "source-map",
+    entry: ["@babel/polyfill", ENTRY_FILE],
+    mode: MODE,
+    module: {
+        rules: [
             {
-                test:/\.(js)$/,
-                use:[
+                test: /\.(js)$/,
+                use: [
                     {
-                        loader:'babel-loader'
-                    }
-                ]
+                        loader: "babel-loader",
+                    },
+                ],
             },
             {
                 test: /\.(scss)$/,
                 use: [
                     {
-                        loader:MiniCssExtractPlugin.loader
+                        loader: MiniCssExtractPlugin.loader,
                     },
                     {
-                        loader:"css-loader"
+                        loader: "css-loader",
                     },
                     {
-                        loader:"postcss-loader",
-                        options:{
-                            postcssOptions:{
-                                plugins:[
+                        loader: "postcss-loader",
+                        options: {
+                            postcssOptions: {
+                                plugins: [
                                     [
-                                        'autoprefixer',
+                                        "autoprefixer",
                                         {
-                                            Browerslist:"cover 99.5%"
+                                            Browerslist: "cover 99.5%",
                                         },
-                                    ]
-                                ]
-                            }
-                        }
+                                    ],
+                                ],
+                            },
+                        },
                     },
                     {
-                        loader:"sass-loader"
-                    }
-                ]
-            }
-        ]
+                        loader: "sass-loader",
+                    },
+                ],
+            },
+        ],
     },
-    output:{
-        path:OUTPUT_DIR,
-        filename:"[name].js"
+    output: {
+        path: OUTPUT_DIR,
+        filename: "[name].js",
     },
-    plugins:[
+    plugins: [
         new MiniCssExtractPlugin({
-            filename:"styles.css"
-        })
-    ]
+            filename: "styles.css",
+        }),
+    ],
     //entry(from), output(to)
 };
-
 
 module.exports = config;
