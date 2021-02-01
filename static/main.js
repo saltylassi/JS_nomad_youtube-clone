@@ -28,6 +28,8 @@ var videoPlayer = document.querySelector("#jsVideoPlayer video");
 var playButton = document.getElementById("jsPlayButton");
 var volumeButton = document.getElementById("jsVolumeButton");
 var fullScreenButton = document.getElementById("jsFullScreen");
+var currentTime = document.getElementById("currentTime");
+var totalTime = document.getElementById("totalTime");
 
 var handlePlayClick = function handlePlayClick() {
   if (videoPlayer.paused) {
@@ -50,22 +52,72 @@ var handleVolumeClick = function handleVolumeClick() {
 };
 
 var goFullScreen = function goFullScreen() {
-  videoContainer.webkitRequestFullscreen();
   fullScreenButton.innerHTML = '<i class="fas fa-compress"></i>';
   fullScreenButton.removeEventListener("click", goFullScreen);
   fullScreenButton.addEventListener("click", exitFullScreen);
+
+  if (videoContainer.requestFullscreen) {
+    videoContainer.requestFullscreen();
+  } else if (videoContainer.mozRequestFullScreen) {
+    videoContainer.mozRequestFullScreen();
+  } else if (videoContainer.webkitRequestFullscreen) {
+    videoContainer.webkitRequestFullscreen();
+  } else if (videoContainer.msRequestFullscreen) {
+    videoContainer.msRequestFullscreen();
+  }
 };
 
 var exitFullScreen = function exitFullScreen() {
-  document.exitFullscreen();
   fullScreenButton.innerHTML = '<i class="fas fa-expand"></i>';
   fullScreenButton.addEventListener("click", goFullScreen);
+
+  if (document.exitFullscreen) {
+    document.exitFullscreen();
+  } else if (document.mozCancelFullScreen) {
+    document.mozCancelFullScreen();
+  } else if (document.webkitExitFullscreen) {
+    document.webkitExitFullscreen();
+  } else if (document.msExitFullscreen) {
+    document.msExitFullscreen();
+  }
+};
+
+var formatDate = function formatDate(time) {
+  var secondsNumber = parseInt(time, 10);
+  var hours = Math.floor(secondsNumber / 3600);
+  var minutes = Math.floor((secondsNumber - hours * 3600) / 60);
+  var seconds = secondsNumber - hours * 3600 - minutes * 60;
+
+  if (hours < 10) {
+    hours = "0".concat(hours);
+  }
+
+  if (minutes < 10) {
+    minutes = "0".concat(minutes);
+  }
+
+  if (seconds < 10) {
+    seconds = "0".concat(seconds);
+  }
+
+  return "".concat(hours, ":").concat(minutes, ":").concat(seconds);
+};
+
+var getCurrentTime = function getCurrentTime() {
+  currentTime.innerHTML = formatDate(videoPlayer.currentTime);
+};
+
+var setTotalTime = function setTotalTime() {
+  var totalTimeString = formatDate(videoPlayer.duration);
+  totalTime.innerHTML = totalTimeString;
+  setInterval(getCurrentTime, 1000);
 };
 
 var init = function init() {
   playButton.addEventListener("click", handlePlayClick);
   volumeButton.addEventListener("click", handleVolumeClick);
   fullScreenButton.addEventListener("click", goFullScreen);
+  videoPlayer.addEventListener("loadedmetadata", setTotalTime); //로딩
 };
 
 if (videoContainer) {
