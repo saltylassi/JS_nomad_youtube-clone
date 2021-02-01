@@ -35,6 +35,13 @@ var currentTime = document.getElementById("currentTime");
 var totalTime = document.getElementById("totalTime");
 var volumeRange = document.getElementById("jsVolume");
 
+var registerView = function registerView() {
+  var videoId = window.location.href.split("/videos")[1];
+  fetch("/api/".concat(videoId, "/view"), {
+    method: "POST"
+  });
+};
+
 var handlePlayClick = function handlePlayClick() {
   if (videoPlayer.paused) {
     videoPlayer.play();
@@ -133,6 +140,7 @@ var setTotalTime = function setTotalTime() {
 };
 
 var handleEnded = function handleEnded() {
+  registerView();
   videoPlayer.currentTime = 0;
   playBtn.innerHTML = '<i class="fas fa-play"></i>';
 };
@@ -164,13 +172,45 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 var recorderContainer = document.getElementById("jsRecordContainer");
 var recordBtn = document.getElementById("jsRecordBtn");
 var videoPreview = document.getElementById("jsVideoPreview");
+var streamObj;
+var videoRecorder;
 
-var startRecording = /*#__PURE__*/function () {
+var handleVideoData = function handleVideoData(event) {
+  var videoFile = event.data;
+  var link = document.createElement("a");
+  link.href = URL.createObjectURL(videoFile); //URL을 얻어와서 연결
+
+  link.download = "recorded.webm";
+  document.body.appendChild(link); //컴포넌트 추가
+
+  link.click();
+};
+
+var startRecording = function startRecording() {
+  console.log(typeof stream === "undefined" ? "undefined" : _typeof(stream));
+  videoRecorder = new MediaRecorder(streamObj);
+  videoRecorder.start();
+  videoRecorder.addEventListener("dataavailable", handleVideoData);
+  recordBtn.removeEventListener("click", startRecording);
+  recordBtn.addEventListener("click", stopRecording);
+};
+
+var stopRecording = function stopRecording() {
+  videoRecorder.stop();
+  recordBtn.removeEventListener("click", stopRecording);
+  recordBtn.addEventListener("click", getVideo);
+  recordBtn.innerHTML = "start Recording";
+};
+
+var getVideo = /*#__PURE__*/function () {
   var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
-    var stream;
+    var _stream;
+
     return regeneratorRuntime.wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
@@ -186,35 +226,42 @@ var startRecording = /*#__PURE__*/function () {
             });
 
           case 3:
-            stream = _context.sent;
-            videoPreview.srcObject = stream;
+            _stream = _context.sent;
+            videoPreview.srcObject = _stream;
             videoPreview.muted = true;
             videoPreview.play();
-            _context.next = 13;
+            recordBtn.innerHTML = "Stop";
+            streamObj = _stream;
+            startRecording();
+            _context.next = 15;
             break;
 
-          case 9:
-            _context.prev = 9;
+          case 12:
+            _context.prev = 12;
             _context.t0 = _context["catch"](0);
-            recordBtn.innerHTML = "☹️ Cant record";
-            recordBtn.removeEventListener("click", startRecording);
+            recordBtn.innerHTML = "device not found";
 
-          case 13:
+          case 15:
+            _context.prev = 15;
+            recordBtn.removeEventListener("click", getVideo);
+            return _context.finish(15);
+
+          case 18:
           case "end":
             return _context.stop();
         }
       }
-    }, _callee, null, [[0, 9]]);
+    }, _callee, null, [[0, 12, 15, 18]]);
   }));
 
-  return function startRecording() {
+  return function getVideo() {
     return _ref.apply(this, arguments);
   };
 }();
 
-function init() {
-  recordBtn.addEventListener("click", startRecording);
-}
+var init = function init() {
+  recordBtn.addEventListener("click", getVideo);
+};
 
 if (recorderContainer) {
   init();
