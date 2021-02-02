@@ -1,6 +1,7 @@
 import routes from "../routes";
 import Video from "../models/Video";
 import Comment from "../models/Comment";
+import User from "../models/User";
 
 export const home = async (req, res) => {
     try {
@@ -58,7 +59,17 @@ export const videoDetail = async (req, res) => {
     } = req;
 
     try {
-        const video = await Video.findById(id).populate("creator").populate("comments"); //populate는 objID에 사용, id로 해당 객체를 참조
+        const video = await Video.findById(id)
+            .populate("creator")
+            .populate({
+                path: "comments",
+                model: "Comment",
+                populate: {
+                    path: "creator",
+                    model: "User",
+                },
+            }); //populate는 objID에 사용, id로 해당 객체를 참조
+        // console.log(video.comments);
         res.render("videoDetail", { pageTitle: "Video Detail", video });
     } catch (error) {
         console.log(error);
@@ -138,15 +149,34 @@ export const postRegisterView = async (req, res) => {
     }
 };
 
-export const postAddcomment = async (req, res) => {
+export const postAddComment = async (req, res) => {
     try {
         const video = await Video.findById(req.params.id);
         const newComment = await Comment.create({
             text: req.body.comment,
             creator: req.user.id,
         });
+        const creator = await User.findById(req.user.id);
+
+        res.json({ creator: creator, text: newComment.text, createdAt: newComment.createdAt });
         video.comments.unshift(newComment.id);
         video.save();
+    } catch (error) {
+        res.status(400);
+        console.log(error);
+    } finally {
+        res.end();
+    }
+};
+
+export const postDeleteComment = async (req, res) => {
+    try {
+        const videoId = req.params.id;
+        const {
+            body: { name, date, text },
+        } = req;
+
+        const video = await Video.findById(id);
     } catch (error) {
         res.status(400);
         console.log(error);

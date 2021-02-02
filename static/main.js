@@ -19,8 +19,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 var addCommentForm = document.getElementById("jsAddComment");
 var commentList = document.querySelector(".video__comments-list");
 var views = document.querySelector(".video__comment-number");
+var commentData; //추후 deleteComment도 만들어야함
+//api작성, 분리
 
-var temp = function temp(text) {
+var addDummy = function addDummy(text) {
   var li = document.createElement("li");
   var comment = document.createElement("span");
   comment.innerHTML = text;
@@ -41,7 +43,7 @@ var sendComment = /*#__PURE__*/function () {
             videoId = window.location.href.split("/videos/")[1];
             _context.next = 4;
             return axios__WEBPACK_IMPORTED_MODULE_0___default()({
-              url: "/api/".concat(videoId, "/comment"),
+              url: "/api/".concat(videoId, "/comment/add"),
               method: "POST",
               data: {
                 comment: text
@@ -50,13 +52,14 @@ var sendComment = /*#__PURE__*/function () {
 
           case 4:
             response = _context.sent;
-            console.log(response);
+            console.log(response.data);
+            commentData = response.data;
 
             if (response.status == 200) {
-              temp(text);
+              addDummy(text);
             }
 
-          case 7:
+          case 8:
           case "end":
             return _context.stop();
         }
@@ -87,6 +90,93 @@ if (addCommentForm) {
 
 /***/ }),
 
+/***/ "./assets/js/deleteComment.js":
+/*!************************************!*\
+  !*** ./assets/js/deleteComment.js ***!
+  \************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+
+var commentList = document.querySelector(".video__comments-list");
+var views = document.querySelector(".video__comment-number");
+var deleteButton = document.querySelector(".delete__comment-btn");
+
+var deleteDummy = function deleteDummy(text) {
+  var li = document.createElement("li");
+  var nameDiv = document.createElement("div");
+  var name = document.createElement("span");
+  comment.innerHTML = text;
+  li.appendChild(comment);
+  commentList.prepend(li); // views.innerHTML = views.innerHTML + 1; -> String취급
+
+  views.innerHTML = parseInt(views.innerHTML) + 1 + " comments";
+};
+
+var getComment = /*#__PURE__*/function () {
+  var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(targetList) {
+    var videoId, userName, text, date, response;
+    return regeneratorRuntime.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            videoId = window.location.href.split("/videos/")[1];
+            userName = targetList.querySelector(".video__comment__creator span").innerHTML;
+            text = targetList.querySelector(".video__comment__text-box span").innerHTML;
+            date = new Date(targetList.querySelector(".video__comment__time span").innerHTML);
+            _context.next = 6;
+            return axios__WEBPACK_IMPORTED_MODULE_0___default()({
+              url: "/api/".concat(videoId, "/comment/delete"),
+              method: "POST",
+              data: {
+                name: userName,
+                date: date,
+                text: text
+              }
+            });
+
+          case 6:
+            response = _context.sent;
+            console.log(response); // if (response.status == 200) {
+            //     deleteDummy(text);
+            // }
+
+          case 8:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee);
+  }));
+
+  return function getComment(_x) {
+    return _ref.apply(this, arguments);
+  };
+}();
+
+var handleDelete = function handleDelete(event) {
+  event.preventDefault();
+  var target = event.target.parentNode.parentNode.parentNode;
+  getComment(target);
+};
+
+var init = function init() {
+  deleteButton.addEventListener("click", handleDelete);
+};
+
+if (commentList) {
+  init();
+}
+
+/***/ }),
+
 /***/ "./assets/js/main.js":
 /*!***************************!*\
   !*** ./assets/js/main.js ***!
@@ -101,6 +191,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _videoRecorder__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./videoRecorder */ "./assets/js/videoRecorder.js");
 /* harmony import */ var _videoRecorder__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_videoRecorder__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _addComment__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./addComment */ "./assets/js/addComment.js");
+/* harmony import */ var _deleteComment__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./deleteComment */ "./assets/js/deleteComment.js");
+
 
 
 

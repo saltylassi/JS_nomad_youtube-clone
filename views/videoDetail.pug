@@ -23,10 +23,19 @@ block content
             if video.comments.length === 1
                 span.video__comment-number 1 comment
             else
-                span.video__comment-number #{video.comments.length} comments 
-            form.add__comment#jsAddComment
-                input(type="text",placeholder="Add a comment")
+                span.video__comment-number #{video.comments.length} comments
+            if loggedUser
+                form.add__comment#jsAddComment
+                    input(type="text",placeholder="Add a comment") 
             ul.video__comments-list
                 each comment in video.comments
-                    li
-                        span=comment.text
+                    li.video__comment
+                        div.comment__content
+                            div.video__comment__text-box
+                                span.video__comment__text=comment.text
+                            div.video__comment__time
+                                span=comment.createdAt
+                            button.delete__comment-btn
+                                span X
+                        div.video__comment__creator
+                            span=comment.creator.name
