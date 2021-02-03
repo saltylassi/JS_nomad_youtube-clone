@@ -34,7 +34,7 @@ block content
                             div.video__comment__text-box
                                 span.video__comment__text=comment.text
                             div.video__comment__time
-                                span=comment.createdAt
+                                span=(comment.createdAt+"").split(("GMT"))[0]
                             button.delete__comment-btn
                                 span X
                         div.video__comment__creator

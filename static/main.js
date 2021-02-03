@@ -22,11 +22,37 @@ var views = document.querySelector(".video__comment-number");
 var commentData; //추후 deleteComment도 만들어야함
 //api작성, 분리
 
-var addDummy = function addDummy(text) {
+var addDummy = function addDummy(name, commentText) {
   var li = document.createElement("li");
+  li.className = "video__comment";
+  var content = document.createElement("div");
+  content.className = "comment__content";
+  var textBox = document.createElement("div");
+  textBox.className = "video__comment__text-box";
   var comment = document.createElement("span");
-  comment.innerHTML = text;
-  li.appendChild(comment);
+  comment.className = "video__comment__text";
+  var time = document.createElement("div");
+  time.className = "video__comment__time";
+  var timeText = document.createElement("span");
+  var deleteBtn = document.createElement("button");
+  deleteBtn.className = "delete__comment-btn";
+  var btnText = document.createElement("span");
+  var user = document.createElement("div");
+  user.className = "video__comment__creator";
+  var userName = document.createElement("span");
+  li.appendChild(content);
+  li.appendChild(user);
+  content.appendChild(textBox);
+  content.appendChild(time);
+  content.appendChild(deleteBtn);
+  textBox.appendChild(comment);
+  time.appendChild(timeText);
+  deleteBtn.appendChild(btnText);
+  user.appendChild(userName);
+  userName.innerText = name;
+  comment.innerText = commentText;
+  btnText.innerText = "X";
+  timeText.innerText = String(new Date()).split("GMT")[0];
   commentList.prepend(li); // views.innerHTML = views.innerHTML + 1; -> String취급
 
   views.innerHTML = parseInt(views.innerHTML) + 1 + " comments";
@@ -34,7 +60,8 @@ var addDummy = function addDummy(text) {
 
 var sendComment = /*#__PURE__*/function () {
   var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(text) {
-    var videoId, response;
+    var videoId, response, _response$data, name, comment;
+
     return regeneratorRuntime.wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
@@ -52,14 +79,15 @@ var sendComment = /*#__PURE__*/function () {
 
           case 4:
             response = _context.sent;
+            _response$data = response.data, name = _response$data.creator.name, comment = _response$data.text;
             console.log(response.data);
             commentData = response.data;
 
             if (response.status == 200) {
-              addDummy(text);
+              addDummy(name, comment);
             }
 
-          case 8:
+          case 9:
           case "end":
             return _context.stop();
         }
