@@ -167,9 +167,8 @@ export const postDeleteComment = async (req, res) => {
     try {
         const videoID = req.params.id;
         let {
-            body: { name, date, text, id: commentID },
+            body: { id: commentID },
         } = req;
-        date = new Date(date);
 
         let video = await Video.findById(videoID).populate("comments");
         const target = await video.comments.filter((comment) => {

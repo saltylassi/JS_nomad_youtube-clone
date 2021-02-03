@@ -135,46 +135,40 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 var commentList = document.querySelector(".video__comments-list");
 var views = document.querySelector(".video__comment-number");
-var deleteButtons = commentList.querySelectorAll(".delete__comment-btn"); // let deleteButtons = [];
+var deleteButtons = commentList.querySelectorAll(".delete__comment-btn");
 
-var deleteDummy = function deleteDummy(text) {
-  var li = document.createElement("li");
-  var nameDiv = document.createElement("div");
-  var name = document.createElement("span");
-  comment.innerHTML = text;
-  li.appendChild(comment);
-  commentList.prepend(li); // views.innerHTML = views.innerHTML + 1; -> String취급
+var deleteDummy = function deleteDummy(targetList) {
+  commentList.removeChild(targetList); // views.innerHTML = views.innerHTML + 1; -> String취급
 
-  views.innerHTML = parseInt(views.innerHTML) + 1 + " comments";
+  views.innerHTML = parseInt(views.innerHTML) + -1 + " comments";
 };
 
 var getComment = /*#__PURE__*/function () {
   var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(targetList) {
-    var videoId, userName, text, date, response;
+    var videoId, response;
     return regeneratorRuntime.wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
             videoId = window.location.href.split("/videos/")[1];
-            userName = targetList.querySelector(".video__comment__creator span").innerHTML;
-            text = targetList.querySelector(".video__comment__text-box span").innerHTML;
-            date = targetList.querySelector(".video__comment__time span").innerHTML;
-            _context.next = 6;
+            _context.next = 3;
             return axios__WEBPACK_IMPORTED_MODULE_0___default()({
               url: "/api/".concat(videoId, "/comment/delete"),
               method: "POST",
               data: {
-                name: userName,
-                date: date,
-                text: text,
                 id: targetList.id
               }
             });
 
-          case 6:
+          case 3:
             response = _context.sent;
+            console.log(response);
 
-          case 7:
+            if (response.status == 200) {
+              deleteDummy(targetList);
+            }
+
+          case 6:
           case "end":
             return _context.stop();
         }
