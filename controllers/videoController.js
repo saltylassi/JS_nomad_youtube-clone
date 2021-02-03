@@ -70,7 +70,7 @@ export const videoDetail = async (req, res) => {
                 },
             }); //populate는 objID에 사용, id로 해당 객체를 참조
         // console.log(video.comments);
-        res.render("videoDetail", { pageTitle: "Video Detail", video });
+        res.render("videoDetail", { pageTitle: video.title, video });
     } catch (error) {
         console.log(error);
         res.redirect(routes.home);
@@ -102,13 +102,7 @@ export const postEditVideo = async (req, res) => {
     } = req;
 
     try {
-        await Video.findOneAndUpdate(
-            { _id: id },
-            {
-                title,
-                description,
-            }
-        );
+        await Video.findOneAndUpdate({ _id: id }, { title, description });
         res.redirect(routes.videoDetail(id));
     } catch (error) {
         console.log(error);
@@ -171,12 +165,40 @@ export const postAddComment = async (req, res) => {
 
 export const postDeleteComment = async (req, res) => {
     try {
-        const videoId = req.params.id;
-        const {
-            body: { name, date, text },
+        const videoID = req.params.id;
+        let {
+            body: { name, date, text, id: commentID },
         } = req;
+        date = new Date(date);
 
-        const video = await Video.findById(id);
+        let video = await Video.findById(videoID).populate("comments");
+        const target = await video.comments.filter((comment) => {
+            return comment._id != commentID;
+        });
+
+        video.comments = target;
+        await Comment.findByIdAndRemove(commentID);
+        video.save();
+
+        // console.log(commentID);
+
+        // const video = await Video.findById(videoID).populate({
+        //     path: "comments",
+        //     model: "Comment",
+        //     populate: {
+        //         path: "creator",
+        //         model: "User",
+        //     },
+        // });
+
+        // const target = video.comments.filter((comment) => {
+        // return comment.text == text && comment.creator.name == name && comment.createdAt == date;
+        // });
+        // console.log(Math.floor(date.getTime() / 1000));
+        // console.log(Math.floor(video.comments[0].createdAt.getTime() / 1000));
+        // console.log(Math.floor(date.getTime() / 1000) == Math.floor(video.comments[0].createdAt.getTime() / 1000));
+        // console.log(target);
+        // console.log(video.comments);
     } catch (error) {
         res.status(400);
         console.log(error);

@@ -29,7 +29,7 @@ block content
                     input(type="text",placeholder="Add a comment") 
             ul.video__comments-list
                 each comment in video.comments
-                    li.video__comment
+                    li.video__comment(id=comment._id)
                         div.comment__content
                             div.video__comment__text-box
                                 span.video__comment__text=comment.text

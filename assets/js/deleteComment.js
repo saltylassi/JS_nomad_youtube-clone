@@ -2,7 +2,7 @@ import axios from "axios";
 
 let commentList = document.querySelector(".video__comments-list");
 let views = document.querySelector(".video__comment-number");
-let deleteButton = document.querySelector(".delete__comment-btn");
+let deleteButton = commentList.querySelector(".delete__comment-btn");
 
 const deleteDummy = (text) => {
     const li = document.createElement("li");
@@ -21,7 +21,7 @@ const getComment = async (targetList) => {
     const videoId = window.location.href.split("/videos/")[1];
     const userName = targetList.querySelector(".video__comment__creator span").innerHTML;
     const text = targetList.querySelector(".video__comment__text-box span").innerHTML;
-    const date = new Date(targetList.querySelector(".video__comment__time span").innerHTML);
+    const date = targetList.querySelector(".video__comment__time span").innerHTML;
 
     const response = await axios({
         url: `/api/${videoId}/comment/delete`,
@@ -30,9 +30,10 @@ const getComment = async (targetList) => {
             name: userName,
             date,
             text,
+            id: targetList.id,
         },
     });
-    console.log(response);
+    // console.log(response);
     // if (response.status == 200) {
     //     deleteDummy(text);
     // }
@@ -41,6 +42,7 @@ const getComment = async (targetList) => {
 const handleDelete = (event) => {
     event.preventDefault();
     let target = event.target.parentNode.parentNode.parentNode;
+    console.log(target.id);
     getComment(target);
 };
 
@@ -48,6 +50,6 @@ const init = () => {
     deleteButton.addEventListener("click", handleDelete);
 };
 
-if (commentList) {
+if (deleteButton) {
     init();
 }

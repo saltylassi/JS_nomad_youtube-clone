@@ -107,7 +107,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 var commentList = document.querySelector(".video__comments-list");
 var views = document.querySelector(".video__comment-number");
-var deleteButton = document.querySelector(".delete__comment-btn");
+var deleteButton = commentList.querySelector(".delete__comment-btn");
 
 var deleteDummy = function deleteDummy(text) {
   var li = document.createElement("li");
@@ -130,7 +130,7 @@ var getComment = /*#__PURE__*/function () {
             videoId = window.location.href.split("/videos/")[1];
             userName = targetList.querySelector(".video__comment__creator span").innerHTML;
             text = targetList.querySelector(".video__comment__text-box span").innerHTML;
-            date = new Date(targetList.querySelector(".video__comment__time span").innerHTML);
+            date = targetList.querySelector(".video__comment__time span").innerHTML;
             _context.next = 6;
             return axios__WEBPACK_IMPORTED_MODULE_0___default()({
               url: "/api/".concat(videoId, "/comment/delete"),
@@ -138,17 +138,15 @@ var getComment = /*#__PURE__*/function () {
               data: {
                 name: userName,
                 date: date,
-                text: text
+                text: text,
+                id: targetList.id
               }
             });
 
           case 6:
             response = _context.sent;
-            console.log(response); // if (response.status == 200) {
-            //     deleteDummy(text);
-            // }
 
-          case 8:
+          case 7:
           case "end":
             return _context.stop();
         }
@@ -164,6 +162,7 @@ var getComment = /*#__PURE__*/function () {
 var handleDelete = function handleDelete(event) {
   event.preventDefault();
   var target = event.target.parentNode.parentNode.parentNode;
+  console.log(target.id);
   getComment(target);
 };
 
@@ -171,7 +170,7 @@ var init = function init() {
   deleteButton.addEventListener("click", handleDelete);
 };
 
-if (commentList) {
+if (deleteButton) {
   init();
 }
 
