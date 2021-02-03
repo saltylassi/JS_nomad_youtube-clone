@@ -4,7 +4,7 @@ let commentList = document.querySelector(".video__comments-list");
 let views = document.querySelector(".video__comment-number");
 let deleteButtons = commentList.querySelectorAll(".delete__comment-btn");
 
-const deleteDummy = (targetList) => {
+const fakeDelete = (targetList) => {
     commentList.removeChild(targetList);
 
     // views.innerHTML = views.innerHTML + 1; -> String취급
@@ -24,7 +24,7 @@ const getComment = async (targetList) => {
     });
     console.log(response);
     if (response.status == 200) {
-        deleteDummy(targetList);
+        fakeDelete(targetList);
     }
 };
 

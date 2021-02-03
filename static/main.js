@@ -137,7 +137,7 @@ var commentList = document.querySelector(".video__comments-list");
 var views = document.querySelector(".video__comment-number");
 var deleteButtons = commentList.querySelectorAll(".delete__comment-btn");
 
-var deleteDummy = function deleteDummy(targetList) {
+var fakeDelete = function fakeDelete(targetList) {
   commentList.removeChild(targetList); // views.innerHTML = views.innerHTML + 1; -> String취급
 
   views.innerHTML = parseInt(views.innerHTML) + -1 + " comments";
@@ -165,7 +165,7 @@ var getComment = /*#__PURE__*/function () {
             console.log(response);
 
             if (response.status == 200) {
-              deleteDummy(targetList);
+              fakeDelete(targetList);
             }
 
           case 6:
