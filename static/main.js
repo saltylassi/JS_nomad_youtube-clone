@@ -107,7 +107,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 var commentList = document.querySelector(".video__comments-list");
 var views = document.querySelector(".video__comment-number");
-var deleteButton = commentList.querySelector(".delete__comment-btn");
+var deleteButtons = commentList.querySelectorAll(".delete__comment-btn"); // let deleteButtons = [];
 
 var deleteDummy = function deleteDummy(text) {
   var li = document.createElement("li");
@@ -161,16 +161,29 @@ var getComment = /*#__PURE__*/function () {
 
 var handleDelete = function handleDelete(event) {
   event.preventDefault();
-  var target = event.target.parentNode.parentNode.parentNode;
-  console.log(target.id);
+  var target = event.target.parentNode.parentNode.parentNode; // console.log(target.id);
+
   getComment(target);
 };
 
 var init = function init() {
-  deleteButton.addEventListener("click", handleDelete);
+  // console.log(commentList.childNodes[1].querySelector(".delete__comment-btn"));
+  // commentList.childNodes.map((item) => {
+  //     deleteButton.push(item.querySelector(".delete__comment-btn"));
+  // });
+  // deleteButtons.map((btn) => {
+  //     btn.classList.add("dd");
+  //     btn.addEventListener("click", handleDelete);
+  // });
+  // deleteButtons.addEventListener("click", handleDelete);
+  for (var i = 0; i < deleteButtons.length; i++) {
+    deleteButtons[i].addEventListener("click", handleDelete);
+  } //나중에 할 때는 버튼을 컴포넌트화 시킬 것
+  //사후처리는 지저분해질 수 밖에 없음
+
 };
 
-if (deleteButton) {
+if (deleteButtons !== []) {
   init();
 }
 

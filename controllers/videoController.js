@@ -178,6 +178,7 @@ export const postDeleteComment = async (req, res) => {
 
         video.comments = target;
         await Comment.findByIdAndRemove(commentID);
+        console.log(video);
         video.save();
 
         // console.log(commentID);

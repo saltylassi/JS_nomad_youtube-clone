@@ -2,7 +2,8 @@ import axios from "axios";
 
 let commentList = document.querySelector(".video__comments-list");
 let views = document.querySelector(".video__comment-number");
-let deleteButton = commentList.querySelector(".delete__comment-btn");
+let deleteButtons = commentList.querySelectorAll(".delete__comment-btn");
+// let deleteButtons = [];
 
 const deleteDummy = (text) => {
     const li = document.createElement("li");
@@ -42,14 +43,31 @@ const getComment = async (targetList) => {
 const handleDelete = (event) => {
     event.preventDefault();
     let target = event.target.parentNode.parentNode.parentNode;
-    console.log(target.id);
+    // console.log(target.id);
     getComment(target);
 };
 
 const init = () => {
-    deleteButton.addEventListener("click", handleDelete);
+    // console.log(commentList.childNodes[1].querySelector(".delete__comment-btn"));
+
+    // commentList.childNodes.map((item) => {
+    //     deleteButton.push(item.querySelector(".delete__comment-btn"));
+    // });
+
+    // deleteButtons.map((btn) => {
+    //     btn.classList.add("dd");
+    //     btn.addEventListener("click", handleDelete);
+    // });
+
+    // deleteButtons.addEventListener("click", handleDelete);
+    for (let i = 0; i < deleteButtons.length; i++) {
+        deleteButtons[i].addEventListener("click", handleDelete);
+    }
+
+    //나중에 할 때는 버튼을 컴포넌트화 시킬 것
+    //사후처리는 지저분해질 수 밖에 없음
 };
 
-if (deleteButton) {
+if (deleteButtons !== []) {
     init();
 }
